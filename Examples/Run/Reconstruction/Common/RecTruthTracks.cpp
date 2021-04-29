@@ -108,6 +108,12 @@ int runRecTruthTracks(int argc, char* argv[],
   // track states (proto states). The elements in both collections
   // must match and must be created from the same input particles.
   // Create truth tracks
+
+  //Dimitry's section
+  
+
+  // Dimitry's end
+
   TruthTrackFinder::Config trackFinderCfg;
   trackFinderCfg.inputParticles = inputParticles;
   trackFinderCfg.inputMeasurementParticlesMap =
@@ -143,6 +149,8 @@ int runRecTruthTracks(int argc, char* argv[],
   fitter.dFit = TrackFittingAlgorithm::makeTrackFitterFunction(magneticField);
   fitter.fit = TrackFittingAlgorithm::makeTrackFitterFunction(trackingGeometry,
                                                               magneticField);
+
+
   sequencer.addAlgorithm(
       std::make_shared<TrackFittingAlgorithm>(fitter, logLevel));
 

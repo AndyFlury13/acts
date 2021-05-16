@@ -1,0 +1,4 @@
+identifier	time_total_s	time_perevent_s
+Reader:EventGenerator	0.006265	6.265e-05
+Writer:CsvParticleWriter	0.06939	0.0006939
+Writer:CsvParticleWriter:endRun	1.38e-07	1.38e-09

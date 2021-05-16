@@ -42,6 +42,14 @@
 
 #include "RecInput.hpp"
 
+
+// Fastrack start
+
+#include "fastrack/lib/ModelClass.h"
+
+
+// Fastrack end
+
 using namespace Acts::UnitLiterals;
 using namespace ActsExamples;
 using namespace boost::filesystem;
@@ -156,8 +164,51 @@ int runRecCKFTracks(int argc, char* argv[],
       trackFinderCfg.inputMeasurementParticlesMap =
           digiCfg.outputMeasurementParticlesMap;
       trackFinderCfg.outputProtoTracks = "prototracks";
-      sequencer.addAlgorithm(
-          std::make_shared<TruthTrackFinder>(trackFinderCfg, logLevel));
+
+      //// Fastrack start
+      std::cout << "Building Fastrack Model:\n";
+      char geom_name[] = "fastrack/geometry.bin";
+      int geom_name_len = geom_name.length();
+      char connections_name[] = "fastrack/connetions.bin";
+      int connections_name_len = connections_name.length();
+      ModelClass* fastrack_model = new ModelClass(geom_name, geom_name_len, connections_name, connections_name_len);
+
+
+      std::cout << "Importing hits:\n";
+      std::cout << "Input particle string:\n";
+      printf(inputParticles);
+      std:: cout << "\n";
+      // int nhits;
+      // int* hit_ids;
+      // int* x;
+      // int* y;
+      // int* z;
+      // const float* px;
+      // const float* py;
+      // const float* pz;
+      // const unsigned long* particle;
+      // const float* w;
+      // fastrack_model::importHits(nhits, hit_ids, x, y, z, px, py, pz particle, w);
+
+      std::cout << "Importing cells: \n"
+
+      int ncells;
+      const int* input_hit_id;
+      const int* ch0;
+      const int* ch1;
+      fastrack_modeL::importCells(ncells, input_hit_id, ch0, ch1);
+
+
+      int* labels;
+      fastrack_model::findTracks(labels);
+      sequencer.addAlgorithm(std::make_shared<TruthTrackFinder>());
+      //// Fastrack end
+
+      printf("Output predictions:\n");
+      
+      //sequencer.addAlgorithm(
+      //    std::make_shared<TruthTrackFinder>(trackFinderCfg, logLevel));
+
       inputProtoTracks = trackFinderCfg.outputProtoTracks;
     } else {
       // Seeding algorithm

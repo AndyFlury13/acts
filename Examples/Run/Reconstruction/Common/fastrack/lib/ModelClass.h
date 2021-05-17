@@ -4,7 +4,7 @@
 #include "ModelInterface.h"
 #include "AlgorithmParameters.h"
 #include "Event.h"
-#include "Geometry.h"
+#include "FastrackGeometry.h"
 #include "LayerLinker.h"
 #include "TrackFinder.h"
 

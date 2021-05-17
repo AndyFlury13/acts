@@ -2,7 +2,7 @@
 #include<cstring>
 #include<cmath>
 
-#include "Geometry.h"
+#include "FastrackGeometry.h"
 
 #include<algorithm>
 
@@ -438,7 +438,7 @@ int Volume::getLayerIntersection(float r1, float z1, float r2, float z2,
 }
 
 
-Geometry::Geometry(std::ifstream& inFile) {
+FastrackGeometry::FastrackGeometry(std::ifstream& inFile) {
   
   while(!inFile.eof()) {
     unsigned int vol_id, lay_id, mod_id;
@@ -480,13 +480,13 @@ Geometry::Geometry(std::ifstream& inFile) {
     newDE->prepare();
     
     if(!addNewDetectorElement(newDE)) {
-      std::cout<<"ERROR in reading Geometry"<<std::endl;
+      std::cout<<"ERROR in reading FastrackGeometry"<<std::endl;
       break;
     }
 
   }
   
-  std::cout<<"Geometry has "<<m_deMap.size()<<" detector elements"<<std::endl;
+  std::cout<<"FastrackGeometry has "<<m_deMap.size()<<" detector elements"<<std::endl;
   
   inFile.close();
 
@@ -526,7 +526,7 @@ Geometry::Geometry(std::ifstream& inFile) {
  
 }
 
-Geometry::~Geometry() {
+FastrackGeometry::~FastrackGeometry() {
   for(std::map<unsigned long, const DETECTOR_ELEMENT*>::iterator it = m_deMap.begin();it != m_deMap.end();++it) {
     delete (*it).second;
   }
@@ -537,13 +537,13 @@ Geometry::~Geometry() {
   m_volMap.clear();
 }
 
-void Geometry::finalize() {
+void FastrackGeometry::finalize() {
   for(std::map<unsigned int, VOLUME*>::iterator it = m_volMap.begin();it!=m_volMap.end();++it) {
     (*it).second->finalize();
   }
 }
 
-unsigned long Geometry::calculateKey(unsigned int v, unsigned int l, unsigned int m) const {
+unsigned long FastrackGeometry::calculateKey(unsigned int v, unsigned int l, unsigned int m) const {
 
   unsigned long key = m;
   key += 10000l*l;
@@ -551,7 +551,7 @@ unsigned long Geometry::calculateKey(unsigned int v, unsigned int l, unsigned in
   return key;
 }
 
-bool Geometry::addNewDetectorElement(const DETECTOR_ELEMENT* p) {
+bool FastrackGeometry::addNewDetectorElement(const DETECTOR_ELEMENT* p) {
 
   const int vtypes[19] = {2,2,2,2,2,2,2,-1,0,1,2,2,-1,0,1,2,-1,0,1};
   
@@ -573,24 +573,24 @@ bool Geometry::addNewDetectorElement(const DETECTOR_ELEMENT* p) {
   return true;
 }
 
-const DETECTOR_ELEMENT* Geometry::getDetectorElement(unsigned int v, unsigned int l, unsigned int m) const {
+const DETECTOR_ELEMENT* FastrackGeometry::getDetectorElement(unsigned int v, unsigned int l, unsigned int m) const {
   int address = (v-7)*7 + (l >> 1);
   return m_deArray[address][m];
 }
 
-void Geometry::getVolumeIds(std::vector<unsigned int>& v) const {
+void FastrackGeometry::getVolumeIds(std::vector<unsigned int>& v) const {
   for(std::map<unsigned int, VOLUME*>::const_iterator it = m_volMap.begin();it!=m_volMap.end();++it) {
     v.push_back((*it).first);
   }
 }
 
-const VOLUME* Geometry::getVolume(unsigned int id) const {
+const VOLUME* FastrackGeometry::getVolume(unsigned int id) const {
   std::map<unsigned int, VOLUME*>::const_iterator it = m_volMap.find(id);
   if(it == m_volMap.end()) return 0;
   return (*it).second;
 }
 
-bool Geometry::getLayerIntersection(const POINT_3D& p1, const POINT_3D& p2, TRAJECTORY& v) const {
+bool FastrackGeometry::getLayerIntersection(const POINT_3D& p1, const POINT_3D& p2, TRAJECTORY& v) const {
 
   const float pixBoundMin = 20.0;
 

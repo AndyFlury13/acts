@@ -12,7 +12,7 @@
 #include<algorithm>
 
 #include "Event.h"
-#include "Geometry.h"
+#include "FastrackGeometry.h"
 
 #define N_THREADS 3
 

@@ -7,7 +7,7 @@
 
 #include "AlgorithmParameters.h"
 #include "Event.h"
-#include "Geometry.h"
+#include "FastrackGeometry.h"
 #include "LayerLinker.h"
 #include "RecoEvent.h"
 #include "DataStructures.h"

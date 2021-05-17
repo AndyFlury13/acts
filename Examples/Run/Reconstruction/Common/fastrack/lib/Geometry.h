@@ -191,10 +191,10 @@ Volume(int t);
 
 } VOLUME;
 
-typedef class Geometry {
+typedef class FastrackGeometry {
  public:
-  Geometry(std::ifstream&);
-  ~Geometry();
+  FastrackGeometry(std::ifstream&);
+  ~FastrackGeometry();
   
   unsigned long calculateKey(unsigned int, unsigned int, unsigned int) const;
   const DETECTOR_ELEMENT* getDetectorElement(unsigned int, unsigned int, unsigned int) const;

@@ -168,15 +168,15 @@ int runRecCKFTracks(int argc, char* argv[],
       //// Fastrack start
       std::cout << "Building Fastrack Model:\n";
       char geom_name[] = "fastrack/geometry.bin";
-      int geom_name_len = geom_name.length();
+      int geom_name_len = 22;
       char connections_name[] = "fastrack/connetions.bin";
-      int connections_name_len = connections_name.length();
+      int connections_name_len = 24;
       ModelClass* fastrack_model = new ModelClass(geom_name, geom_name_len, connections_name, connections_name_len);
 
 
       std::cout << "Importing hits:\n";
       std::cout << "Input particle string:\n";
-      printf(inputParticles);
+      std::cout << inputParticles;
       std:: cout << "\n";
       // int nhits;
       // int* hit_ids;
@@ -188,24 +188,24 @@ int runRecCKFTracks(int argc, char* argv[],
       // const float* pz;
       // const unsigned long* particle;
       // const float* w;
-      // fastrack_model::importHits(nhits, hit_ids, x, y, z, px, py, pz particle, w);
+      // fastrack_model->importHits(nhits, hit_ids, x, y, z, px, py, pz particle, w);
 
-      std::cout << "Importing cells: \n"
+      std::cout << "Importing cells: \n";
 
-      int ncells;
-      const int* input_hit_id;
-      const int* ch0;
-      const int* ch1;
-      fastrack_modeL::importCells(ncells, input_hit_id, ch0, ch1);
+      // int ncells;
+      // const int* input_hit_id;
+      // const int* ch0;
+      // const int* ch1;
+      //fastrack_model->importCells(ncells, input_hit_id, ch0, ch1);
 
 
-      int* labels;
-      fastrack_model::findTracks(labels);
-      sequencer.addAlgorithm(std::make_shared<TruthTrackFinder>());
+      // int* labels;
+      // fastrack_model->findTracks(labels);
+      // std::cout << "Output predictions";
       //// Fastrack end
 
-      printf("Output predictions:\n");
-      
+
+
       //sequencer.addAlgorithm(
       //    std::make_shared<TruthTrackFinder>(trackFinderCfg, logLevel));
 

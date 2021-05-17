@@ -3,7 +3,7 @@ CFLAGS= -O3 -std=c++11 -Xpreprocessor -fopenmp -mfma -msse2 -c -Wall -Wextra -fP
 
 LDFLAGS += -lomp
 
-SOURCES_FFF = AlgorithmParameters.cpp Geometry.cpp LayerLinker.cpp FieldModel.cpp Track.cpp
+SOURCES_FFF = AlgorithmParameters.cpp FastrackGeometry.cpp LayerLinker.cpp FieldModel.cpp Track.cpp
 SOURCES_FFF += HitBin.cpp HitLayer.cpp HitBank.cpp ClusterMaker.cpp
 SOURCES_FFF += TrackingFilter.cpp FastTrackExtrapolator.cpp FastTrackFitter.cpp
 SOURCES_FFF += TrackFinder.cpp ModelClass.cpp

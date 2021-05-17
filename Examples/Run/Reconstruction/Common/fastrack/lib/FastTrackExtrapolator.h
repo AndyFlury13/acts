@@ -2,7 +2,7 @@
 #define __FAST_TRACK_EXTRAPOLATOR_H__
 
 #include "AlgorithmParameters.h"
-#include "Geometry.h"
+#include "FastrackGeometry.h"
 #include "FieldModel.h"
 #include "DataStructures.h"
 #include "RecoEvent.h"

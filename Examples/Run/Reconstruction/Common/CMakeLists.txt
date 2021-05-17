@@ -3,7 +3,22 @@ add_library(
   RecInput.cpp
   RecTruthTracks.cpp
   RecCKFTracks.cpp
-  SeedingExample.cpp)
+  SeedingExample.cpp
+  fastrack/lib/ModelClass.cpp
+  fastrack/lib/AlgorithmParameters.cpp
+  fastrack/lib/ClusterMaker.cpp
+  fastrack/lib/FastrackGeometry.cpp
+  fastrack/lib/FastTrackExtrapolator.cpp
+  fastrack/lib/FastTrackFitter.cpp
+  fastrack/lib/FieldModel.cpp
+  fastrack/lib/HitBank.cpp
+  fastrack/lib/HitBin.cpp
+  fastrack/lib/HitLayer.cpp
+  fastrack/lib/LayerLinker.cpp
+  fastrack/lib/Model.cpp
+  fastrack/lib/Track.cpp
+  fastrack/lib/TrackFinder.cpp
+  fastrack/lib/TrackingFilter.cpp)
 
 target_include_directories(
   ActsExamplesRecTracksCommon
@@ -19,9 +34,8 @@ target_link_libraries(
     ActsExamplesMagneticField
     ActsExamplesTruthTracking
     ActsExamplesIoCsv
-    ActsExamplesIoPerformance
-    libModel)
-
+    ActsExamplesIoPerformance)
+set(CMAKE_CXX_FLAGS "-fopenmp")
 
 if(ACTS_BUILD_PLUGIN_ONNX)
   target_compile_definitions(

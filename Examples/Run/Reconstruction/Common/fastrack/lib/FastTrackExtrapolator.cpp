@@ -61,8 +61,8 @@ void  FastTrackExtrapolator::extrapolateOutsideFast(const TRACK_STATE* pTS, TRAJ
 
   float sinf, cosf, sint, cost;
 
-  __sincosf(Re[2], &sinf, &cosf);
-  __sincosf(Re[3], &sint, &cost);
+  sincosf(Re[2], &sinf, &cosf);
+  sincosf(Re[3], &sint, &cost);
 
   gV[0]=sint*cosf;gV[1]=sint*sinf;gV[2]=cost;
 
@@ -184,8 +184,8 @@ void FastTrackExtrapolator::extrapolateInsideFast(const TRACK_STATE* pTS, TRAJEC
   float sinf, cosf;
   float sint, cost;
 
-  __sincosf(Re[2], &sinf, &cosf);
-  __sincosf(Re[3], &sint, &cost);
+  sincosf(Re[2], &sinf, &cosf);
+  sincosf(Re[3], &sint, &cost);
 
   gV[0]=sint*cosf;gV[1]=sint*sinf;gV[2]=cost;
 
@@ -285,8 +285,8 @@ int FastTrackExtrapolator::fastExtrapolate(TRACK_STATE* pTS, int h, float minSte
   float sinf, cosf;
   float sint, cost;
 
-  __sincosf(Re[2], &sinf, &cosf);
-  __sincosf(Re[3], &sint, &cost);
+  sincosf(Re[2], &sinf, &cosf);
+  sincosf(Re[3], &sint, &cost);
 
   gV[0]=cosf*sint;gV[1]=sinf*sint;gV[2]=cost;
 
@@ -474,8 +474,8 @@ int FastTrackExtrapolator::fastExtrapolator(TRACK_STATE* pTS, int h, bool checkB
   float sinf, cosf;
   float sint, cost;
 
-  __sincosf(Re[2], &sinf, &cosf);
-  __sincosf(Re[3], &sint, &cost);
+  sincosf(Re[2], &sinf, &cosf);
+  sincosf(Re[3], &sint, &cost);
 
   gV[0]=cosf*sint;gV[1]=sinf*sint;gV[2]=cost;
 

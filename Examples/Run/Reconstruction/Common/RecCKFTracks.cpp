@@ -46,7 +46,9 @@
 // Fastrack start
 
 #include "fastrack/lib/ModelClass.h"
-
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
 
 // Fastrack end
 
@@ -82,6 +84,7 @@ int runRecCKFTracks(int argc, char* argv[],
   addRecCKFOptions(desc);
   Options::addDigitizationOptions(desc);
   Options::addSpacePointMakerOptions(desc);
+
 
   auto vm = Options::parse(desc, argc, argv);
   if (vm.empty()) {
@@ -136,15 +139,21 @@ int runRecCKFTracks(int argc, char* argv[],
   // The selected particles
   const auto& inputParticles = particleSelectorCfg.outputParticles;
 
+
+
+  
+
   // Create starting parameters from either particle smearing or combined seed
   // finding and track parameters estimation
   std::string outputTrackParameters;
   if (truthSmearedSeeded) {
     // Run the particle smearing
-    auto particleSmearingCfg =
+	  
+	  auto particleSmearingCfg =
         setupParticleSmearing(vm, sequencer, rnd, inputParticles);
     outputTrackParameters = particleSmearingCfg.outputTrackParameters;
   } else {
+    std::cout << "testing truthsmeared seeded block FALSE\n";
     // Create space points
     SpacePointMaker::Config spCfg = Options::readSpacePointMakerConfig(vm);
     spCfg.inputSourceLinks = digiCfg.outputSourceLinks;
@@ -174,10 +183,6 @@ int runRecCKFTracks(int argc, char* argv[],
       ModelClass* fastrack_model = new ModelClass(geom_name, geom_name_len, connections_name, connections_name_len);
 
 
-      std::cout << "Importing hits:\n";
-      std::cout << "Input particle string:\n";
-      std::cout << inputParticles;
-      std:: cout << "\n";
       // int nhits;
       // int* hit_ids;
       // int* x;
@@ -211,6 +216,134 @@ int runRecCKFTracks(int argc, char* argv[],
 
       inputProtoTracks = trackFinderCfg.outputProtoTracks;
     } else {
+      std::cout << "==============================\n";
+      std::cout << "Using event 39 as an example:\n";
+      // Reading in hits data:
+      fstream my_file;
+      fstream for_nrows;
+      
+      //Get num rows of data
+      for_nrows.open("build/data/sim_generic/four_muons/event000000039-hits.csv", std::ios::in);
+      int rows = 0;
+      if (!for_nrows) {
+	  std::cout << "No such file";
+	  std::cout << "\n";
+      } else {
+	  char ch1;
+          while(1) {
+              if (for_nrows.eof()) {
+                  break;
+	      }
+	      if (ch1=='\n') {
+		  rows = rows + 1;
+	      }
+          }
+      }
+      for_nrows.close();
+      rows = rows -1; // trailing line break
+
+
+
+      // Importing hits
+      std::cout << "Reading in hit data\n";
+      my_file.open("build/data/sim_generic/four_muons/event000000039-hits.csv", std::ios::in);
+
+      float hit_x_arr[rows];
+      float hit_y_arr[rows];
+      float hit_z_arr[rows];
+      int vol_id_arr[rows];
+      int lay_id_arr[rows];
+      int module_id_arr[rows];
+      int id[rows];
+
+      if (!my_file) {
+	  std::cout << "No such file";
+	  std::cout << "\n";
+      } else {
+     	  char ch;
+	  int col = 0;
+	  char val[13];
+	  int i = 0;
+	  int row = 0;
+	  while (1) {
+	      my_file >> ch;
+              if (my_file.eof()) {
+	          break;
+	      }
+	      if (ch == ',' || ch == '\n') {
+		  if ((col == 2) || (col == 3) || (col == 4)) {
+		      val[i] = '\0';
+		      i = 0;
+		      if (!(val[0] == 't')) {
+			  std::cout << atof(val);
+		 	  std::cout << "\n";
+			  if (col == 2) {
+			      hit_x_arr[row] = atof(val);
+			      vol_id_arr[row] = 13;
+			      lay_id_arr[row] = 13;
+			      module_id_arr[rows]=13;
+		              id[row] = 13;
+			  }
+			  if (col == 3) {
+			      hit_y_arr[row] = atof(val);
+			  }
+			  if (col == 4) {
+			      hit_z_arr[row] = atof(val);
+			  }
+		     }
+		  }
+		  col = (col +1) % 14;
+		  if (ch == '\n') {
+		      row = row +1;
+		  }
+	      } else {
+	          if ((col ==2) || (col ==3) || (col ==4)) {
+		      val[i] = ch;
+		      i = i+1;
+		  }
+	      } 
+      	  }
+      }
+      my_file.close();
+
+      float *hit_x = hit_x_arr;
+      float *hit_y = hit_y_arr;
+      float *hit_z = hit_z_arr;      
+      int *vol_id = vol_id_arr;
+      int *lay_id = lay_id_arr;
+      int *module_id = module_id_arr;
+      int *hit_id = id;
+      
+      char geom_name[] = "fastrack/geometry.bin";
+      int geom_name_len = 22;
+      char connections_name[] = "fastrack/connetions.bin";
+      int connections_name_len = 24;
+
+      ModelClass* fastrack_model = new ModelClass(geom_name, geom_name_len, connections_name, connections_name_len);
+      fastrack_model->importHits(rows, hit_id, hit_x, hit_y, hit_z, vol_id, lay_id, module_id);
+      
+      //Cell data would go here. For now we'll use dummy data.
+      std::cout << "Generating mock cell data\n";
+      int nCells = 130;
+      int ch0_arr[nCells];
+      int ch1_arr[nCells];
+      for (int j = 0; j < nCells; j++) {
+          ch0_arr[j] = 13;
+	  ch1_arr[j] = 26;
+      }
+      int *ch0 = ch0_arr;
+      int *ch1 = ch1_arr;
+
+      fastrack_model->importCells(nCells, hit_id, ch0, ch1);
+
+      int num_tracks = 260;
+      int track_id_arr[num_tracks];
+      int *track_id = track_id_arr;
+      std::cout << "Finding tracks...\n";
+      fastrack_model->findTracks(track_id);
+
+      std::cout << "===========================\n";
+
       // Seeding algorithm
       SeedingAlgorithm::Config seedingCfg;
       seedingCfg.inputSpacePoints = {
@@ -244,6 +377,8 @@ int runRecCKFTracks(int argc, char* argv[],
     tfPerfCfg.inputProtoTracks = inputProtoTracks;
     // using selected particles
     tfPerfCfg.inputParticles = inputParticles;
+    std::cout << "Track finder performance input particles. This should be data, right?\n";
+    std::cout << inputParticles;
     tfPerfCfg.inputMeasurementParticlesMap =
         digiCfg.outputMeasurementParticlesMap;
     tfPerfCfg.outputDir = outputDir;

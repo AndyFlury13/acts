@@ -3,6 +3,7 @@ add_library(
   RecInput.cpp
   RecTruthTracks.cpp
   RecCKFTracks.cpp
+  RecCKFTracksFastrack.cpp
   SeedingExample.cpp
   fastrack/lib/ModelClass.cpp
   fastrack/lib/AlgorithmParameters.cpp

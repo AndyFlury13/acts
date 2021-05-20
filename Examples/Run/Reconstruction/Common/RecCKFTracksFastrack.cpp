@@ -141,14 +141,14 @@ int runRecCKFTracks(int argc, char* argv[],
 
 
 
-  
+
 
   // Create starting parameters from either particle smearing or combined seed
   // finding and track parameters estimation
   std::string outputTrackParameters;
   if (truthSmearedSeeded) {
     // Run the particle smearing
-	  
+
 	  auto particleSmearingCfg =
         setupParticleSmearing(vm, sequencer, rnd, inputParticles);
     outputTrackParameters = particleSmearingCfg.outputTrackParameters;
@@ -174,45 +174,12 @@ int runRecCKFTracks(int argc, char* argv[],
           digiCfg.outputMeasurementParticlesMap;
       trackFinderCfg.outputProtoTracks = "prototracks";
 
-      //// Fastrack start
-      std::cout << "Building Fastrack Model:\n";
-      char geom_name[] = "fastrack/geometry.bin";
-      int geom_name_len = 22;
-      char connections_name[] = "fastrack/connetions.bin";
-      int connections_name_len = 24;
-      ModelClass* fastrack_model = new ModelClass(geom_name, geom_name_len, connections_name, connections_name_len);
-
-
-      // int nhits;
-      // int* hit_ids;
-      // int* x;
-      // int* y;
-      // int* z;
-      // const float* px;
-      // const float* py;
-      // const float* pz;
-      // const unsigned long* particle;
-      // const float* w;
-      // fastrack_model->importHits(nhits, hit_ids, x, y, z, px, py, pz particle, w);
-
-      std::cout << "Importing cells: \n";
-
-      // int ncells;
-      // const int* input_hit_id;
-      // const int* ch0;
-      // const int* ch1;
-      //fastrack_model->importCells(ncells, input_hit_id, ch0, ch1);
-
-
-      // int* labels;
-      // fastrack_model->findTracks(labels);
-      // std::cout << "Output predictions";
-      //// Fastrack end
 
 
 
-      //sequencer.addAlgorithm(
-      //    std::make_shared<TruthTrackFinder>(trackFinderCfg, logLevel));
+
+      sequencer.addAlgorithm(
+          std::make_shared<TruthTrackFinder>(trackFinderCfg, logLevel));
 
       inputProtoTracks = trackFinderCfg.outputProtoTracks;
     } else {
@@ -221,7 +188,7 @@ int runRecCKFTracks(int argc, char* argv[],
       // Reading in hits data:
       fstream my_file;
       fstream for_nrows;
-      
+
       //Get num rows of data
       for_nrows.open("build/data/sim_generic/four_muons/event000000039-hits.csv", std::ios::in);
       int rows = 0;
@@ -301,27 +268,27 @@ int runRecCKFTracks(int argc, char* argv[],
 		      val[i] = ch;
 		      i = i+1;
 		  }
-	      } 
+	      }
       	  }
       }
       my_file.close();
 
       float *hit_x = hit_x_arr;
       float *hit_y = hit_y_arr;
-      float *hit_z = hit_z_arr;      
+      float *hit_z = hit_z_arr;
       int *vol_id = vol_id_arr;
       int *lay_id = lay_id_arr;
       int *module_id = module_id_arr;
       int *hit_id = id;
-      
-      char geom_name[] = "fastrack/geometry.bin";
-      int geom_name_len = 22;
-      char connections_name[] = "fastrack/connetions.bin";
-      int connections_name_len = 24;
+
+      char geom_name[] = "/../Examples/Run/Reconstruction/Common/fastrack/geometry.bin"; //The opening escape might not be necessary based on build directory
+      int geom_name_len = sizeof(geom_name)/sizeof(geom_name[0]);
+      char connections_name[] = "/../Examples/Run/Reconstruction/Common/fastrack/connetions.bin";
+      int connections_name_len = sizeof(connections_name)/sizeof(connections_name[0]);
 
       ModelClass* fastrack_model = new ModelClass(geom_name, geom_name_len, connections_name, connections_name_len);
       fastrack_model->importHits(rows, hit_id, hit_x, hit_y, hit_z, vol_id, lay_id, module_id);
-      
+
       //Cell data would go here. For now we'll use dummy data.
       std::cout << "Generating mock cell data\n";
       int nCells = 130;
